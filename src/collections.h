@@ -20,7 +20,7 @@ public:
     filter(std::function<bool(T)> func);
 
     Collection<T>
-    range(T low, T high);
+    slice(int low, int high);
 
     template<typename Function>
     Collection<typename std::result_of<Function(T)>::type>
@@ -54,11 +54,11 @@ Collection<T>::filter(std::function<bool(T)> func) {
 
 template<typename T>
 Collection<T>
-Collection<T>::range(T low, T high) {
+Collection<T>::slice(int low, int high) {
+    // TODO: bounds checking
     std::vector<T> list;
-    for (auto i : Data)
-        if (i >= low && i <= high)
-            list.push_back(i);
+    for (int i = low; i <= high; i++)
+        list.push_back(Data[i]);
     return Collection<T>(list);
 };
 
@@ -111,7 +111,7 @@ template<typename T>
 T
 Collection<T>::operator[] (const int index) {
     return Data[index];
-}
+};
 
 template<typename T>
 void
@@ -121,7 +121,6 @@ Collection<T>::print() {
         std::cout << Data[i] << ",";
     std::cout << Data[Data.size() - 1] << "]" << std::endl;
 };
-
 
 #endif
 
