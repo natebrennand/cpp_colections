@@ -95,6 +95,11 @@ public:
     // Return the Collection that results from the transformation of each
     // element in the original Collection
     template<typename Function>
+    static
+    Collection<T>
+    take(int size, Function func, std::vector<T> seed);
+
+    template<typename Function>
     Collection<typename std::result_of<Function(T)>::type>
     map(Function func);
 
@@ -286,6 +291,23 @@ Collection<T>::range(int low, int high) {
         list[i] = T(low + i);
     static auto x = Collection<T>(list);
     return x;
+};
+
+
+template<typename T>
+template<typename Function>
+Collection<T>
+Collection<T>::take(int size, Function func, std::vector<T> seed) {
+    std::vector<T> list(size);    
+    for (int i = 0; i < seed.size(); i++)
+        list[i] = seed[i];
+
+    std::vector<T> tmp = seed;
+    for (int i = seed.size(); i < size; i++) {
+        tmp = func(tmp);
+        list[i] = tmp[tmp.size() - 1];
+    }
+    return Collection<T>(list);
 };
 
 
